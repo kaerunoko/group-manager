@@ -1,0 +1,31 @@
+{
+  "mls": [
+    {
+      "name": "その1",
+      "address": "no1@exapmle.com",
+      "members": [
+        "ichiro@example.com",
+        "jiro@example.com"
+      ]
+    },
+    {
+      "name": "その2",
+      "address": "no2@exapmle.com",
+      "members": []
+    },
+    {
+      "name": "その3",
+      "address": "no3@exapmle.com",
+      "members": [
+        "ichiro@example.com"
+      ]
+    },
+    {
+      "name": "その4",
+      "address": "no4@exapmle.com",
+      "members": [
+        "jiro@example.com"
+      ]
+    }
+  ]
+}

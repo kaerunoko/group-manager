@@ -1,0 +1,16 @@
+{
+  "members": [
+    {
+      "name": "一郎",
+      "address": "ichiro@example.com"
+    },
+    {
+      "jiro": "二郎",
+      "address": "jiro@example.com"
+    },
+    {
+      "saburo": "三郎",
+      "address": "saburo@example.com"
+    }
+  ]
+}
