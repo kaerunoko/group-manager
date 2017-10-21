@@ -1,0 +1,33 @@
+<h1 mat-dialog-title>メンバー追加</h1>
+<div mat-dialog-content>
+  <h2>ID / 氏名</h2>
+  {{selectedName ? selectedName.name : '...'}}
+  <mat-input-container>
+    <input type="text" matInput [matAutocomplete]="auto" [formControl]="userControl" placeholder="ID または 氏名 または メールアドレスで検索">
+  </mat-input-container>
+  <mat-autocomplete #auto="matAutocomplete">
+    <mat-option *ngFor="let name of filteredNames | async" [value]="name.id">{{name.name}}(id: {{name.id}})</mat-option>
+  </mat-autocomplete>
+
+  <h3>メールアドレス</h3>
+
+  <ul *ngIf="selectedName">
+    <ng-container *ngFor="let mail of getSelectedUserMails()">
+      <li *ngIf="mail">
+        <!-- 空のリストの可能性 -->
+        <mat-checkbox (change)="onMailSelect(mail, $event)" [disabled]="existingMails.includes(mail)" [ngModel]="existingMails.includes(mail)">{{mail}}</mat-checkbox>
+      </li>
+    </ng-container>
+    <li>
+      <mat-checkbox [(ngModel)] = "addNewMail">新規追加</mat-checkbox>
+        <mat-input-container *ngIf="addNewMail">
+          <input matInput type="email" placeholder="新規登録するメールアドレス" [(ngModel)]="newMail" required="true">
+        </mat-input-container>
+    </li>
+  </ul>
+</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>キャンセル</button>
+  <button mat-raised-button (click)="save()" [disabled]="!isValid()" color="primary">決定</button>
+  {{message}}
+</div>

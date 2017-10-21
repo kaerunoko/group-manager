@@ -1,10 +1,15 @@
-<google-api (onChange)="onLoginStatusChange($event)"></google-api> 
-<main-control></main-control>
-<md-tab-group *ngIf = "isLoggedIn">
-    <md-tab label="CSVで一括更新">
-        <bulk-editor></bulk-editor>
-    </md-tab>
-    <md-tab label="一覧表で編集">
-        <grid-editor (change)="gridChange($event)"></grid-editor>
-    </md-tab>
-</md-tab-group>
+<app-google-api (onChange)="onLoginStatusChange($event)"></app-google-api> 
+<mat-tab-group *ngIf = "isLoggedIn" class="main-tab">
+    <mat-tab label="メーリングリストを個別に編集">
+        <app-group-editor (onSave)="groupMemberChange($event)"></app-group-editor>
+    </mat-tab>
+    <mat-tab label="一覧表で編集">
+        <app-grid-editor (onSave)="groupMemberChange($event)"></app-grid-editor>
+    </mat-tab>
+    <mat-tab label="退会処理">
+        作成中
+    </mat-tab>
+    <mat-tab label="名簿管理チームの登録・削除">
+        作成中
+    </mat-tab>
+</mat-tab-group>

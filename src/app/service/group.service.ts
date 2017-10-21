@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { Group } from './../model/group'
-import { GroupUsers, GroupUser } from './../model/groupUsers'
-import { GoogleApiService } from "./gapi.service";
+import { Group } from './../model/group';
+import { GroupMembers, GroupMember } from './../model/groupUsers';
+import { GoogleApiService } from './gapi.service';
 
 @Injectable()
 export class GroupService {
@@ -10,24 +10,24 @@ export class GroupService {
     }
 
     public getGroups(): Observable<Group[]> {
-        return this.gapiService.callScriptFunction("getGroups", null).map(res => res);
+        return this.gapiService.callScriptFunction('getGroups', null).map(res => res);
     }
 
-    public getGroupUsers(groupEmail: string): Observable<GroupUsers> {
-        return this.gapiService.callScriptFunction("getGroupUsers", groupEmail).map(res => {
-            let groupUsers = new GroupUsers(groupEmail);
-            groupUsers.users = res ? res.map(user => new GroupUser(user.email)) : [];
+    public getGroupUsers(groupEmail: string): Observable<GroupMembers> {
+        return this.gapiService.callScriptFunction('getGroupMembers', groupEmail).map(res => {
+            const groupUsers = new GroupMembers(groupEmail);
+            groupUsers.members = res ? res.map(user => new GroupMember(user.email)) : [];
             return groupUsers;
         });
     }
 
     public removeUser(groupEmail: string, userEmail: string): Promise<string> {
-        return this.gapiService.callScriptFunction("removeUser", [groupEmail, userEmail])
-        .first().toPromise();
+        return this.gapiService.callScriptFunction('removeMember', [groupEmail, userEmail])
+            .first().toPromise();
     }
 
     public addUser(groupEmail: string, userEmail: string): Promise<string> {
-        return this.gapiService.callScriptFunction("addUser", [groupEmail, userEmail])
-        .first().toPromise();
+        return this.gapiService.callScriptFunction('addMember', [groupEmail, userEmail])
+            .first().toPromise();
     }
 }

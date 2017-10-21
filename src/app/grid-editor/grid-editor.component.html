@@ -1,0 +1,106 @@
+<!-- GridEditor: グリッドでの編集が仕事。保存ボタンを押したタイミングでOnChangeイベント発火 -->
+
+<style>
+    .filter-by-id {
+        width: 50px
+    }
+    .name-col {
+        min-width: 120px;
+    }
+
+    .mail-col {
+        min-width: 200px;
+        border-right: 1px solid #F5F5F5;
+    }
+
+    .ml-description {
+        min-width: 100px;
+    }
+
+    td {
+        min-width: 50px;
+    }
+
+    .showOnlyActiveGroupHeader {
+        text-align: left;
+    }
+
+    mat-icon.info-icon{
+        cursor: help;
+    }
+</style>
+
+<section>
+    <button mat-raised-button (click)="save()" color="primary">保存</button>
+    <button mat-raised-button (click)="reload()">再読込<mat-icon class="mat-24" aria-label="再読込" matTooltip="再読込">refresh</mat-icon></button>
+</section>
+
+<section>
+    <mat-form-field>
+        <mat-select placeholder="表示する件数" [(ngModel)]="limit">
+            <mat-option *ngFor="let opt of limits" [value]="opt.val">
+                {{ opt.title }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <br /> 総メールアドレス数：{{users.length}}（絞り込み後：{{filteredUsersCount}}）
+    <br /> 大量に表示する場合は名前で絞り込んで行数を減らしたり、編集モードのMLのみを表示して列を減らしてください。
+
+</section>
+
+<section>
+    <table>
+        <thead>
+            <tr>
+                <th>
+                    <mat-input-container class="filter-by-id" matTooltip="IDで絞り込み（完全一致）">
+                        <input matInput placeholder="IDで絞り込み" [(ngModel)]="userIdFilter">
+                    </mat-input-container>
+                </th>
+                <th class="name-col">
+                    <mat-input-container matTooltip="氏名で絞り込み（部分一致）">
+                        <input matInput placeholder="氏名で絞り込み" [(ngModel)]="userNameFilter">
+                    </mat-input-container>
+                </th>
+                <th class="mail-col">
+                    <mat-input-container matTooltip="メールアドレスで絞り込み（部分一致）">
+                        <input matInput placeholder="メールアドレスで絞り込み" [(ngModel)]="userMailFilter">
+                    </mat-input-container>
+                </th>
+                <th colSpan="{{groupStatus.length}}" class="showOnlyActiveGroupHeader">
+                    <mat-checkbox [(ngModel)]="showOnlyActiveGroup" [disabled]="!hasEnabledGroup()" matTooltip="{{hasEnabledGroup() ? '' : 'MLが一つも選択されていません'}}">編集モードのみ表示</mat-checkbox>
+                    <mat-icon class="mat-24 info-icon" aria-label="編集モードのみ表示" matTooltip="下段の切り替えボタンがOFF（グレー）のMLを隠します">info</mat-icon>
+                </th>
+            </tr>
+            <tr>
+                <th (click)="orderBy('ID')" class="orderable">
+                    ID<span class="order">{{orderByText('ID')}}</span>
+                </th>
+                <th (click)="orderBy('NAME')" class="orderable name-col">
+                    氏名<span class="order">{{orderByText('NAME')}}</span>
+                </th>
+                <th (click)="orderBy('MAIL')" class="orderable mail-col">
+                    メールアドレス<span class="order">{{orderByText('MAIL')}}</span>
+                </th>
+                <th *ngFor="let groupState of groupStatus" [hidden]="showOnlyActiveGroup && !groupState.enabled">
+                    {{groupState.mail.split('@')[0]}}<br /> {{groupState.name}}
+                    <br />
+                    <mat-slide-toggle #change color="primary" [checked]="groupState.enabled" (change)="onToggleEnabled($event, groupState.mail)"></mat-slide-toggle>
+                </th>
+            </tr>
+        </thead>
+        <ng-container *ngFor="let user of filteredUsers()">
+            <tr>
+                <td>{{user.id}}</td>
+                <td>{{user.name}}</td>
+                <td class="mail-col">{{user.mail}}</td>
+                <ng-container *ngFor="let groupState of groupStatus">
+                    <td [ngClass]="groupState.getUserState(user.mail) == 0 ? '' : 'changed'" [hidden]="showOnlyActiveGroup && !groupState.enabled">
+                        <mat-checkbox [checked]="groupState.hasUser(user.mail)" [disabled]="!groupState.enabled" (change)="onCheck($event, groupState.mail, user.mail)"></mat-checkbox>
+                    </td>
+                </ng-container>
+            </tr>
+
+        </ng-container>
+    </table>
+</section>

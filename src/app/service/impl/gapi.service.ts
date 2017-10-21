@@ -1,9 +1,9 @@
 import { Injectable, EventEmitter, NgZone } from '@angular/core';
 import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
-import { Subscriber } from "rxjs/Subscriber";
-import { GoogleApiServiceIf, LoginStatus } from "../gapi.service";
-import { environment } from "../../../environments/environment";
+import { Subscriber } from 'rxjs/Subscriber';
+import { GoogleApiServiceIf, LoginStatus } from '../gapi.service.interface';
+import { environment } from '../../../environments/environment';
 
 declare var gapi: any;
 
@@ -11,7 +11,9 @@ declare var gapi: any;
 export class GoogleApiServiceImpl implements GoogleApiServiceIf {
 
     // Array of API discovery doc URLs for APIs used by the quickstart
-    private DISCOVERY_DOCS = ["https://script.googleapis.com/$discovery/rest?version=v1"];
+    private DISCOVERY_DOCS = ['https://script.googleapis.com/$discovery/rest?version=v1'];
+
+    private onStatusChangeEvent: EventEmitter<LoginStatus> = new EventEmitter();
 
     constructor(private zone: NgZone) {
 
@@ -25,17 +27,15 @@ export class GoogleApiServiceImpl implements GoogleApiServiceIf {
         return this.onStatusChangeEvent;
     }
 
-    private onStatusChangeEvent: EventEmitter<LoginStatus> = new EventEmitter();
-
     /**
      *  Initializes the API client library and sets up sign-in state
      *  listeners.
      */
     private initClient() {
-        let config = {
+        const config = {
             discoveryDocs: this.DISCOVERY_DOCS,
             clientId: environment.clientId,
-            scope: environment.scopes.join(" ")
+            scope: environment.scopes.join(' ')
         };
         gapi.client.init(config).then(() => {
             // Listen for sign-in state changes.
@@ -55,7 +55,7 @@ export class GoogleApiServiceImpl implements GoogleApiServiceIf {
     private updateSigninStatus() {
         // in listen context, NgZone.isInAngularZone is false.
         this.zone.run(() => {
-            let isSignedIn: boolean = gapi.auth2.getAuthInstance().isSignedIn.get();
+            const isSignedIn: boolean = gapi.auth2.getAuthInstance().isSignedIn.get();
             // debugger
             if (isSignedIn) {
                 this.onStatusChangeEvent.emit(LoginStatus.LOGIN);
@@ -87,12 +87,12 @@ export class GoogleApiServiceImpl implements GoogleApiServiceIf {
         let subscriber: Subscriber<any> = new Subscriber();
 
         try {
-            let isSignedIn: boolean = gapi.auth2.getAuthInstance().isSignedIn.get();
+            const isSignedIn: boolean = gapi.auth2.getAuthInstance().isSignedIn.get();
             if (!isSignedIn) {
-                throw new Error("Not logged in");
+                throw new Error('Not logged in');
             }
         } catch (e) {
-            throw new Error("Something wrong... Please call loadClient before calling this method.");
+            throw new Error('Something wrong... Please call loadClient before calling this method.');
         }
 
         // Call the Execution API run method
@@ -109,7 +109,7 @@ export class GoogleApiServiceImpl implements GoogleApiServiceIf {
         }).then((resp) => {
             // In then statement, it is not in the Angular Zone (NgZone.isInAngularZone is false)
             this.zone.run(() => {
-                var result = resp.result;
+                const result = resp.result;
                 if (result.error && result.error.status) {
                     // The API encountered a problem before the script
                     // started executing.
@@ -120,17 +120,12 @@ export class GoogleApiServiceImpl implements GoogleApiServiceIf {
                     // Extract the first (and only) set of error details.
                     // The values of this object are the script's 'errorMessage' and
                     // 'errorType', and an array of stack trace elements.
-                    var error = result.error.details[0];
-                    var errorMessage = 'Script error message: ' + error.errorMessage;
-
-                    if (error.scriptStackTraceElements) {
-                        // There may not be a stacktrace if the script didn't start
-                        // executing.
-                        errorMessage += 'Script error stacktrace:';
-                        for (var i = 0; i < error.scriptStackTraceElements.length; i++) {
-                            var trace = error.scriptStackTraceElements[i];
-                            errorMessage += '\t' + trace.function + ':' + trace.lineNumber;
-                        }
+                    const error = result.error.details[0];
+                    let errorMessage: string;
+                    if (error.errorMessage.indexOf('削除された可能性があります') > 0) {
+                        errorMessage = '名簿を閲覧する権限がありません';
+                    } else {
+                        errorMessage = 'Script error message: ' + error.errorMessage;
                     }
                     subscriber.error(errorMessage);
                 } else {
@@ -140,13 +135,21 @@ export class GoogleApiServiceImpl implements GoogleApiServiceIf {
                     // is treated as a JavaScript object (folderSet).
                     subscriber.next(result.response.result);
                 }
+                subscriber.complete();
             });
         }).catch(function (e) {
-            subscriber.error(e);
+            const result = e.result;
+            if (result && result.error && result.error.code === 404) {
+                subscriber.error('サーバーで処理を実行できませんでした。このアカウントに権限が付与されていない可能性があります。');
+            } else if (result && result.error && result.error.code >= 500) {
+                subscriber.error('サーバーでエラーが発生しました。時間をおいて再度実行してください。');
+            }
+            console.error(e);
+            subscriber.complete();
         });
 
 
-        return new Observable((s) => { subscriber = s });
+        return new Observable((s) => { subscriber = s; });
 
     }
 }

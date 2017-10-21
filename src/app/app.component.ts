@@ -1,11 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
 
-import { MdDialog} from '@angular/material';
+import { MatDialog} from '@angular/material';
 
-import { GroupChangeRequest } from "./model/change-request";
-import { UpdateConfirmDialog } from "./component/dialog/dialog.component";
-import { GridEditor } from "./component/editor/grid.component";
-import { LoginStatus } from "./service/gapi.service";
+import { UpdateConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { ChangeEvent } from './model/editor';
+import { LoginStatus } from './service/gapi.service.interface';
 
 @Component({
   selector: 'app-root',
@@ -13,27 +12,20 @@ import { LoginStatus } from "./service/gapi.service";
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  @ViewChild(GridEditor)
-  private gridEditor: GridEditor;
+  public isLoggedIn = false;
 
-  constructor(private dialog: MdDialog) {
+  constructor(private dialog: MatDialog) {
 
   }
 
-  gridChange(event: GroupChangeRequest[]) {
-    let confirmDialog = this.dialog.open(UpdateConfirmDialog, { data: { groupChangeRequests: event } });
+  groupMemberChange(event: ChangeEvent) {
+    const confirmDialog = this.dialog.open(UpdateConfirmDialogComponent, { data: { groupChangeRequests: event.data } });
     confirmDialog.afterClosed().toPromise()
-      .then(() => this.editorReset())
-      .catch(() => this.editorReset());
+      .then(event.resolve)
+      .catch(event.reject);
   }
 
-  private editorReset(): void{
-    this.gridEditor.clearGroupUsers();
-  }
-
-  private onLoginStatusChange(event): void {
+  onLoginStatusChange(event): void {
     this.isLoggedIn = event === LoginStatus.LOGIN;
-  };
-
-  private isLoggedIn: boolean = false;
+  }
 }

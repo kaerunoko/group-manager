@@ -1,0 +1,25 @@
+<style>
+    .login-card{
+        margin: 0 auto;
+        max-width: 400px;
+    }
+    .button{
+        margin-left: auto;
+        display: block;
+    }
+    .container {
+        padding: 32px;
+    }
+    p {
+        margin-bottom: 32px;
+    }
+</style>
+
+<div class="container">
+    <div *ngIf="loginStatus === 0">読み込み中...</div>
+    <mat-card *ngIf="loginStatus === 2" class="login-card">
+        <p>名簿を編集するためにはログインしてください</p>
+        <button mat-raised-button (click)="login()" color="primary" class="button">ログイン</button>
+    </mat-card>
+    <button class="button" mat-raised-button (click)="logout()" *ngIf="loginStatus === 1">ログアウト</button>
+</div>

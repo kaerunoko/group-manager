@@ -1,17 +1,17 @@
-export class GroupUsers{
+export class GroupMembers {
     private _groupMail: string;
-    private _users: GroupUser[];
-    constructor(groupMail: string){
+    private _users: GroupMember[];
+    constructor(groupMail: string) {
         this._groupMail = groupMail;
         this._users = [];
     }
-    get mail(): string{
+    get mail(): string {
         return this._groupMail;
     }
-    get users(): GroupUser[]{
+    get members(): GroupMember[] {
         return this._users;
     }
-    set users(users: GroupUser[]){
+    set members(users: GroupMember[]) {
         this._users = users;
     }
 }
@@ -19,12 +19,12 @@ export class GroupUsers{
 /**
  * 将来的にはステータスとか役割とかも…
  */
-export class GroupUser{
+export class GroupMember {
     private _mail: string;
-    constructor(mail: string){
+    constructor(mail: string) {
         this._mail = mail;
     }
-    get mail(): string{
+    get mail(): string {
         return this._mail;
     }
 }

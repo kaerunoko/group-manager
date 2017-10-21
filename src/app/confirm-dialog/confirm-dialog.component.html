@@ -7,8 +7,8 @@
   }
 </style>
 
-<h1 md-dialog-title>確認</h1>
-<div md-dialog-content>
+<h1 mat-dialog-title>確認</h1>
+<div mat-dialog-content>
   <div>以下の内容で保存します。</div>
   <div *ngFor="let gc of groupChangeRequests">
     {{generateGroupMessage(gc)}}
@@ -16,13 +16,13 @@
       <li *ngFor="let user of gc.users">
         {{user.mail}}
         <ng-container *ngIf="getRequestStateString(gc, user) === 'requesting'">
-          <md-progress-spinner class="spinner" color="primary" mode="indeterminate"> </md-progress-spinner>
+          <mat-progress-spinner class="spinner" color="primary" mode="indeterminate"> </mat-progress-spinner>
         </ng-container>
         <ng-container *ngIf="getRequestStateString(gc, user) === 'submitted'">
-          <md-icon>done</md-icon>
+          <mat-icon>done</mat-icon>
         </ng-container>
         <ng-container *ngIf="getRequestStateString(gc, user) === 'error'">
-          <md-icon>error</md-icon>
+          <mat-icon>error</mat-icon>
         </ng-container>
       </li>
     </ul>
@@ -34,7 +34,7 @@
 <div *ngIf="errorMessage">
   エラー：{{errorMessage}}
 </div>
-<div md-dialog-actions>
-  <button md-button md-dialog-close>閉じる</button>
-  <button md-button (click)="save()" [disabled]="isRequested">保存</button>
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">閉じる</button>
+  <button mat-button (click)="save()" [disabled]="isRequested">保存</button>
 </div>
