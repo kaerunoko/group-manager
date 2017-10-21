@@ -1,0 +1,31 @@
+<style>
+    div{margin-top: 20px;}
+    
+</style>
+
+<div>
+    <button md-button (click)="save()">保存</button>
+    <span>{{message}}</span>
+</div>
+
+<div>
+    <md-select [placeholder]="selectPlaceholder" [(ngModel)]="target">
+        <md-option *ngFor="let group of groups" [value]="group.mail">{{group.name}} ({{group.mail}})</md-option>
+    </md-select>
+</div>
+
+<div>
+    <md-radio-group [(ngModel)]="mode">
+        <md-radio-button value="add">追加</md-radio-button>
+        <md-radio-button value="replace">置き換え</md-radio-button>
+    </md-radio-group>
+</div>
+
+<md-input-container>
+    <textarea mdInput [(ngModel)]="mailLines" placeholder="メールアドレス"></textarea>
+    <div>
+        一行にひとつ入力してください。<br /> 例）
+        <br /> tanaka@example.com
+        <br /> sat@example.com
+    </div>
+</md-input-container>

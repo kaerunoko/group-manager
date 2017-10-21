@@ -1,0 +1,40 @@
+<style>
+  .spinner {
+    display: inline-block;
+    height: 18px;
+    width: 18px;
+    margin-bottom: -4px;
+  }
+</style>
+
+<h1 md-dialog-title>確認</h1>
+<div md-dialog-content>
+  <div>以下の内容で保存します。</div>
+  <div *ngFor="let gc of groupChangeRequests">
+    {{generateGroupMessage(gc)}}
+    <ul>
+      <li *ngFor="let user of gc.users">
+        {{user.mail}}
+        <ng-container *ngIf="getRequestStateString(gc, user) === 'requesting'">
+          <md-progress-spinner class="spinner" color="primary" mode="indeterminate"> </md-progress-spinner>
+        </ng-container>
+        <ng-container *ngIf="getRequestStateString(gc, user) === 'submitted'">
+          <md-icon>done</md-icon>
+        </ng-container>
+        <ng-container *ngIf="getRequestStateString(gc, user) === 'error'">
+          <md-icon>error</md-icon>
+        </ng-container>
+      </li>
+    </ul>
+  </div>
+</div>
+<div *ngIf="message">
+  {{message}}
+</div>
+<div *ngIf="errorMessage">
+  エラー：{{errorMessage}}
+</div>
+<div md-dialog-actions>
+  <button md-button md-dialog-close>閉じる</button>
+  <button md-button (click)="save()" [disabled]="isRequested">保存</button>
+</div>

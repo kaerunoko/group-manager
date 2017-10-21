@@ -1,0 +1,10 @@
+<google-api (onChange)="onLoginStatusChange($event)"></google-api> 
+<main-control></main-control>
+<md-tab-group *ngIf = "isLoggedIn">
+    <md-tab label="CSVで一括更新">
+        <bulk-editor></bulk-editor>
+    </md-tab>
+    <md-tab label="一覧表で編集">
+        <grid-editor (change)="gridChange($event)"></grid-editor>
+    </md-tab>
+</md-tab-group>

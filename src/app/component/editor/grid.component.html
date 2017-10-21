@@ -1,0 +1,43 @@
+<style>
+    .hoge {
+        color: brown;
+    }
+
+    .changed {
+        background-color: #FCC;
+    }
+</style>
+
+<!-- GridEditor: グリッドでの編集が仕事。保存ボタンを押したタイミングでOnChangeイベント発火 -->
+<button md-button (click)="save()" color="primary">保存</button>
+<button md-button (click)="reload()">再読込</button>
+ <!-- ↓これはダイアログに表示するべきだが一旦ここで
+<ul>
+    <li *ngFor="let request of requests">{{request.type}} {{request.group}} {{request.mail}} {{request.status}}</li>
+</ul>
+
+<button md-button (click)="openDialog()">Launch dialog</button> You chose: {{selectedOption}} -->
+
+<table class="hoge">
+    <thead>
+        <th>氏名</th>
+        <th>メールアドレス</th>
+        <th *ngFor="let groupState of groupStatus">
+            {{groupState.mail.split('@')[0]}}<br /> {{groupState.name}}
+            <br />
+            <md-slide-toggle #change color="primary" [checked]="groupState.enabled" (change)="onToggleEnabled($event, groupState.mail)"></md-slide-toggle>
+        </th>
+    </thead>
+    <ng-container *ngFor="let user of users">
+        <tr>
+            <td>{{user.name}}</td>
+            <td>{{user.mail}}</td>
+            <ng-container *ngFor="let groupState of groupStatus">
+                <td [ngClass]="groupState.getUserState(user.mail) == 0 ? '' : 'changed'">
+                    <md-checkbox [checked]="groupState.hasUser(user.mail)" [disabled]="!groupState.enabled" (change)="onCheck($event, groupState.mail, user.mail)"></md-checkbox>
+                </td>
+            </ng-container>
+        </tr>
+
+    </ng-container>
+</table>
