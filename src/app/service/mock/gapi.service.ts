@@ -12,11 +12,15 @@ export class GoogleApiServiceMock implements GoogleApiServiceIf {
     private users: any[];
     private groups: any[];
     private groupMembers: any[];
+    private accounts: any[];
+    private accountAdmins: string[];
+    private groupAdmins: string[];
 
     constructor() {
         this.groups = this.initGroups();
         this.users = this.initUsers();
         this.groupMembers = this.initGroupMembers();
+        this.accounts = this.initAccounts();
     }
 
     private run(callback: () => void) {
@@ -28,7 +32,7 @@ export class GoogleApiServiceMock implements GoogleApiServiceIf {
         return this.event;
     }
 
-    callScriptFunction(remoteFunction: string, remoteParameters: any): Observable<any> {
+    callScriptFunction(remoteFunction: string, remoteParameters?: any): Observable<any> {
         let subscriber: Subscriber<any> = new Subscriber();
         const obs = new Observable((s) => subscriber = s);
         this.run(() => {
@@ -54,8 +58,18 @@ export class GoogleApiServiceMock implements GoogleApiServiceIf {
                     case 'addUserMail':
                         subscriber.next(this.addUserMail(remoteParameters[0], remoteParameters[1]));
                         break;
+                    case 'getAccounts':
+                        subscriber.next(this.accounts);
+                        break;
+                    case 'removeAccountAdmin':
+                        subscriber.next(this.removeAccountAdmin(remoteParameters));
+                        break;
+                    case 'addAccountAdmin':
+                        this.accountAdmins.push(remoteParameters);
+                        subscriber.next(true);
+                        break;
                     default:
-                        subscriber.error('not defined');
+                        subscriber.error(`${remoteFunction} is not defined`);
 
                 }
             } catch (error) {
@@ -81,24 +95,28 @@ export class GoogleApiServiceMock implements GoogleApiServiceIf {
     private initGroups(): any {
         const result = [
             {
-                'mail': 'test1@kaerunoko.com',
+                'mail': 'test1@example.com',
                 'name': 'テスト1'
             },
             {
-                'mail': 'test2@kaerunoko.com',
+                'mail': 'test2@example.com',
                 'name': 'テスト2'
             },
             {
-                'mail': 'test3@kaerunoko.com',
+                'mail': 'test3@example.com',
                 'name': 'テスト3'
             },
             {
-                'mail': 'test4@kaerunoko.com',
+                'mail': 'test4@example.com',
                 'name': 'テスト4'
             },
             {
-                'mail': 'test5@kaerunoko.com',
+                'mail': 'test5@example.com',
                 'name': 'テスト5'
+            },
+            {
+                'mail': 'meibo-admin@example.com',
+                'name': '名簿管理チーム'
             }
         ];
 
@@ -173,7 +191,7 @@ export class GoogleApiServiceMock implements GoogleApiServiceIf {
 
     private initGroupMembers(): any {
         return {
-            'test1@kaerunoko.com': [
+            'test1@example.com': [
                 {
                     'email': 'satoshi@example.com'
                 },
@@ -198,8 +216,26 @@ export class GoogleApiServiceMock implements GoogleApiServiceIf {
                 {
                     'email': 'unknown@example.com'
                 }
+            ],
+            'meibo-admin@example.com': [
+                {
+                    'email': 'mario@example.com'
+                }
             ]
         };
+    }
+
+    private initAccounts(): any {
+        return [
+            {
+                mail: 'mario@example.com',
+                id: 'id-00001',
+                firstName: 'Mario',
+                lastName: '*',
+                org: '/名簿管理チーム',
+                isAdmin: false
+            }
+        ];
     }
 
     private addUserMail(id: number, mail: string): void {
@@ -236,5 +272,14 @@ export class GoogleApiServiceMock implements GoogleApiServiceIf {
             this.groupMembers[group] = members;
         }
         members.push({ 'email': mail });
+    }
+
+    private removeAccountAdmin(mail: string): boolean {
+        const index = this.accountAdmins.findIndex(account => account === mail);
+        if (index > -1) {
+            this.accountAdmins.splice(index, 1);
+            return true;
+        }
+        return false;
     }
 }

@@ -1,0 +1,40 @@
+<!-- <div>
+  <ol>
+    <li>solaアカウントの発行</li>
+    <li>名簿管理組織への登録（＝グループ変更の権限付与）</li>
+    <li>名簿管理MLへの登録（＝名簿変更の権限付与）</li>
+  </ol>
+  sola一覧表示
+</div> -->
+
+<section>
+  <div class="add-button">
+    <button mat-raised-button color="primary">追加</button>
+  </div>
+  <table>
+    <thead>
+      <th></th>
+      <th>solaアカウント</th>
+      <th>ID</th>
+      <th>氏名</th>
+      <th>solaアカウント発行権限</th>
+      <th>グループ照会・変更権限</th>
+      <th>名簿照会・変更権限</th>
+    </thead>
+    <tr *ngFor="let account of accounts">
+      <td><button mat-button color="warn" *ngIf="!account.isAccountAdmin">停止</button></td>
+      <td>{{account.mail}}</td>
+      <td>{{account.id}}</td>
+      <td>{{account.name}}</td>
+      <td class="register">
+        <app-register-button [addFunction]="addAccountAdmin.bind(this)" [removeFunction]="removeAccountAdmin.bind(this)" [mail]="account.mail" [isRegistered]="account.isAccountAdmin"></app-register-button>
+      </td>
+      <td class="register">
+        <app-register-button [addFunction]="addGroupAdmin.bind(this)" [removeFunction]="removeGroupAdmin.bind(this)" [mail]="account.mail" [isRegistered]="account.isGroupAdmin" *ngIf="!account.isAccountAdmin"></app-register-button>
+      </td>
+      <td class="register">
+        <app-register-button [addFunction]="addAdminGroupMember.bind(this)" [removeFunction]="removeAdminGroupMember.bind(this)" [mail]="account.mail" [isRegistered]="account.isAdminGroupMember"></app-register-button>
+      </td>
+    </tr>
+  </table>
+</section>

@@ -1,0 +1,17 @@
+.add-button{
+    text-align: right;
+    padding-bottom: 8px;
+}
+
+.warn{
+    color: #f44336;
+}
+
+td.register{
+    text-align: center;
+}
+
+.spinner {
+    display: inline-block;
+    margin-bottom: 1px;
+}
