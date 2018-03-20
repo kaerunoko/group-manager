@@ -15,6 +15,8 @@ export class GoogleApiServiceImpl implements GoogleApiServiceIf {
 
     private onStatusChangeEvent: EventEmitter<LoginStatus> = new EventEmitter();
 
+    private retryCount = 0;
+
     constructor(private zone: NgZone) {
 
     }
@@ -23,8 +25,22 @@ export class GoogleApiServiceImpl implements GoogleApiServiceIf {
      *  On load, called to load the auth2 library and API client library.
      */
     public loadClient(): EventEmitter<LoginStatus> {
-        gapi.load('client:auth2', this.initClient.bind(this));
-        return this.onStatusChangeEvent;
+        if (typeof gapi !== 'undefined') {
+            gapi.load('client:auth2', this.initClient.bind(this));
+            return this.onStatusChangeEvent;
+        }
+
+        console.log('not yet...');
+        if (this.retryCount < 10) {
+            this.retryCount++;
+            setTimeout(() => {
+                this.loadClient();
+            }, 200 * this.retryCount);
+            return this.onStatusChangeEvent;
+        }
+
+        console.error('fail to load google api');
+        this.onStatusChangeEvent.emit(LoginStatus.FAIL);
     }
 
     /**
@@ -43,8 +59,9 @@ export class GoogleApiServiceImpl implements GoogleApiServiceIf {
 
             // Handle the initial sign-in state.
             this.updateSigninStatus();
-        }).catch(function (e) {
+        }).catch((e) => {
             console.error(e);
+            this.onStatusChangeEvent.emit(LoginStatus.FAIL);
         });
     }
 

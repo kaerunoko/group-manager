@@ -23,15 +23,6 @@ export class GoogleApiComponent implements OnInit {
     constructor(private gapiService: GoogleApiService) {
     }
 
-    public execute(remoteFunction: string, remoteParameters: any): Observable<any> {
-        if (this.loginStatus === LoginStatus.LOGIN) {
-            return this.gapiService.callScriptFunction(remoteFunction, remoteParameters);
-        } else {
-            console.log('not logged in!');
-            return null;
-        }
-    }
-
     ngOnInit(): void {
         this.loginStatus = LoginStatus.LOADING;
         this.gapiService.loadClient().subscribe(this.setStatus.bind(this));

@@ -9,5 +9,5 @@ export interface GoogleApiServiceIf {
 }
 
 export enum LoginStatus {
-    LOADING, LOGIN, LOGOUT
+    LOADING, LOGIN, LOGOUT, FAIL
 }

@@ -21,7 +21,13 @@ export class GoogleApiService implements GoogleApiServiceIf {
     }
 
     public loadClient(): EventEmitter<LoginStatus> {
-        return this.service.loadClient();
+        const loginEvent: EventEmitter<LoginStatus> = this.service.loadClient();
+        loginEvent.subscribe(state => {
+            if (state === LoginStatus.FAIL) {
+                this.openSnackBar('通信に失敗しました');
+            }
+        });
+        return loginEvent;
     }
 
     public login(): void {
