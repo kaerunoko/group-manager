@@ -1,0 +1,22 @@
+<ng-container *ngIf="isRegistered">
+  <button mat-button color="warn" (click)="remove()" [disabled]="isRegistering" *ngIf="removeFunction">
+    <ng-container *ngIf="!isRegistering">
+      削除
+    </ng-container>
+    <span *ngIf="isRegistering" class="spinner">
+      <mat-progress-spinner [diameter]=20 [strokeWidth]=3 class="spinner" color="primary" mode="indeterminate"> </mat-progress-spinner>
+    </span>
+  </button>
+  <span *ngIf="!removeFunction">登録済み</span>
+</ng-container>
+<ng-container *ngIf="!isRegistered">
+  <span class="warn">未登録です</span>
+  <button mat-raised-button color="basic" (click)="add()" [disabled]="isRegistering" *ngIf="addFunction">
+    <ng-container *ngIf="!isRegistering">
+      登録
+    </ng-container>
+    <span *ngIf="isRegistering" class="spinner">
+      <mat-progress-spinner [diameter]=20 [strokeWidth]=3 class="spinner" color="primary" mode="indeterminate"> </mat-progress-spinner>
+    </span>
+  </button>
+</ng-container>

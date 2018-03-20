@@ -88,10 +88,10 @@ export class UpdateConfirmDialogComponent implements OnInit {
                 let promise: Promise<string>;
                 switch (gcr.mode) {
                     case GroupUserChangeRequestMode.ADD_USER_GROUP:
-                        promise = this.applyRequestResult(this.groupService.addUser(gcr.group, user.mail), gcr, user);
+                        promise = this.applyRequestResult(this.groupService.addUser(gcr.group, user.mail).toPromise(), gcr, user);
                         break;
                     case GroupUserChangeRequestMode.REMOVE_USER_GROUP:
-                        promise = this.applyRequestResult(this.groupService.removeUser(gcr.group, user.mail), gcr, user);
+                        promise = this.applyRequestResult(this.groupService.removeUser(gcr.group, user.mail).toPromise(), gcr, user);
                         break;
                 }
                 promises.push(promise);

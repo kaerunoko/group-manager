@@ -21,13 +21,11 @@ export class GroupService {
         });
     }
 
-    public removeUser(groupEmail: string, userEmail: string): Promise<string> {
-        return this.gapiService.callScriptFunction('removeMember', [groupEmail, userEmail])
-            .first().toPromise();
+    public removeUser(groupEmail: string, userEmail: string): Observable<boolean> {
+        return this.gapiService.callScriptFunction('removeMember', [groupEmail, userEmail]);
     }
 
-    public addUser(groupEmail: string, userEmail: string): Promise<string> {
-        return this.gapiService.callScriptFunction('addMember', [groupEmail, userEmail])
-            .first().toPromise();
+    public addUser(groupEmail: string, userEmail: string): Observable<boolean> {
+        return this.gapiService.callScriptFunction('addMember', [groupEmail, userEmail]);
     }
 }

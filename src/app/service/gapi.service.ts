@@ -32,7 +32,7 @@ export class GoogleApiService implements GoogleApiServiceIf {
         this.service.logout();
     }
 
-    public callScriptFunction(remoteFunction: string, remoteParameters: any): Observable<any> {
+    public callScriptFunction(remoteFunction: string, remoteParameters?: any): Observable<any> {
         return this.service.callScriptFunction(remoteFunction, remoteParameters)
             .catch(error => {
                 this.openSnackBar(error);

@@ -34,10 +34,13 @@ import { GoogleApiComponent } from './gapi/gapi.component';
 import { GroupService } from './service/group.service';
 import { UserService } from './service/user.service';
 import { GoogleApiService } from './service/gapi.service';
+import { AdminService } from './service/admin.service';
 
 import { GoogleApiServiceImpl } from './service/impl/gapi.service';
 import { GoogleApiServiceMock } from './service/mock/gapi.service';
 import { AddMemberDialogComponent } from './add-member-dialog/add-member-dialog.component';
+import { AdminComponent } from './admin/admin.component';
+import { RegisterButtonComponent } from './register-button/register-button.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +49,9 @@ import { AddMemberDialogComponent } from './add-member-dialog/add-member-dialog.
     GroupEditorComponent,
     UpdateConfirmDialogComponent,
     GoogleApiComponent,
-    AddMemberDialogComponent
+    AddMemberDialogComponent,
+    AdminComponent,
+    RegisterButtonComponent
   ],
   imports: [
     BrowserModule,
@@ -75,6 +80,7 @@ import { AddMemberDialogComponent } from './add-member-dialog/add-member-dialog.
   providers: [
     GroupService,
     UserService,
+    AdminService,
     GoogleApiService,
     GoogleApiServiceImpl,
     GoogleApiServiceMock
