@@ -35,7 +35,8 @@ export class AdminComponent implements OnInit {
           mail: account.mail,
           isAccountAdmin: account.isAdmin,
           isGroupAdmin: account.org === '/名簿管理チーム',
-          isAdminGroupMember: adminGroupMembers.members.findIndex(mem => mem.mail === account.mail) >= 0
+          isAdminGroupMember: adminGroupMembers.members.findIndex(mem => mem.mail === account.mail) >= 0,
+          isSuspended: false
         };
       });
     });
