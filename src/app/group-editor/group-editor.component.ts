@@ -1,6 +1,7 @@
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 import { MatInputModule, MatDialog } from '@angular/material';
 import { MatCard } from '@angular/material';
+import { FormControl } from '@angular/forms';
 
 import { Group } from '../model/group';
 import { GroupMember } from '../model/groupUsers';
@@ -27,13 +28,7 @@ export class GroupEditorComponent implements OnInit {
 
     selectPlaceholder = '読み込み中...';
 
-    showCsvMenu = false;
-
-    mode = 'add';
-
     groups: Group[];
-
-    mailLines: string;
 
     target: string;
 
@@ -45,33 +40,6 @@ export class GroupEditorComponent implements OnInit {
 
     loaded = false;
 
-    /**
-     * return email list
-     * with simple validate
-     * @param src
-     * @throws error
-     */
-    private static parse(src: string): string[] {
-        if (src === null || src === '') {
-            return [];
-        }
-        const lines = src.split('\n')
-            .map(line => line.trim().toLowerCase())
-            .filter(line => line !== '');
-
-        const errors = [];
-        lines.forEach(line => {
-            if (!MailUtil.isValid(line)) {
-                errors.push(line);
-            }
-        });
-        if (errors.length > 0) {
-            throw new Error('不正なメールアドレスです: ' + errors.join(', '));
-        }
-
-        return lines;
-    }
-
     constructor(private groupService: GroupService, private userService: UserService, private dialog: MatDialog) {
     }
 
@@ -82,14 +50,25 @@ export class GroupEditorComponent implements OnInit {
         });
     }
 
-    hideCsvMenu(): void {
-        this.mode = 'add';
-        this.mailLines = '';
-        this.showCsvMenu = false;
-    }
-
     isModified(): boolean {
         return this.targetMembers.find(member => member.state !== GroupMemberState.INIT) !== undefined;
+    }
+
+    add(user: User): void {
+        const existing = this.targetMembers.find(m => m.mail === user.mail);
+        if (existing) {
+            existing.state = existing.state === GroupMemberState.ADD_AND_REMOVE ? GroupMemberState.ADD : GroupMemberState.INIT;
+        } else {
+            const newMember = new GroupMemberForEdit(user.id, user.mail, user.name);
+            newMember.state = GroupMemberState.ADD;
+            this.targetMembers.unshift(newMember);
+        }
+    }
+
+    getExistingEmails(): string[] {
+        return this.targetMembers
+        .filter(m => [GroupMemberState.INIT, GroupMemberState.ADD].includes(m.state))
+        .map(m => m.mail);
     }
 
     save(): void {
@@ -142,113 +121,6 @@ export class GroupEditorComponent implements OnInit {
                 });
                 this.loaded = true;
             });
-    }
-
-    applyToList(): void {
-        this.message = '解析中...';
-
-        this.validate()
-            .then(mails => this.compareUserList(mails))
-            .then(compareResult => {
-                if (compareResult.undefined.length > 0) {
-                    // TODO 該当しなかったものの処理
-                    console.error(compareResult.undefined);
-                    // ダイアログとかで名簿から選択させる？
-                    // 一旦「戻す」ことにする
-                    this.mailLines = compareResult.undefined.join('\n');
-                    this.message = '未登録のメールアドレスがあります';
-                } else {
-                    this.mailLines = '';
-                    this.message = '';
-                }
-                return this.compareAndApply(compareResult.exist, this.mode);
-            }).catch(val => {
-                console.error(val);
-                this.message = val;
-            });
-    }
-
-    private validate(): Promise<string[]> {
-        return new Promise<string[]>((resolve, reject) => {
-            if (!this.mode || !this.mailLines || !this.target) {
-                reject('すべての項目を入力してください');
-            }
-            try {
-                const mails = GroupEditorComponent.parse(this.mailLines);
-                resolve(mails);
-            } catch (msg) {
-                reject(msg.message);
-            }
-        });
-    }
-
-    private compareUserList(mails: string[]): Promise<{ 'exist': string[], 'undefined': string[] }> {
-        return new Promise<{ 'exist': string[], 'undefined': string[] }>((resolve, reject) => {
-            this.userService.getUserList().toPromise()
-                .then(currentUsers => {
-                    const existMails = mails.filter(mail => currentUsers.find(user => user.mail === mail));
-                    const undefinedMails = mails.filter(mail => !currentUsers.find(user => user.mail === mail));
-                    resolve({
-                        'exist': existMails,
-                        'undefined': undefinedMails
-                    });
-                }, () => {
-                    reject('通信エラー');
-                });
-        });
-    }
-
-    private addMemberMail(mails: string[]) {
-        mails.forEach(mail => {
-            const member = this.targetMembers.find(groupUser => groupUser.mail === mail);
-            if (!member) {
-                this.userService.getUserList().toPromise().then(users => {
-                    let user = users.find(u => u.mail === mail);
-                    if (!user) {
-                        user = new User(-1, mail, '未登録');
-                    }
-                    this.targetMembers.unshift(GroupMemberForEdit.of(user, GroupMemberState.ADD));
-                });
-            } else if (member.state === GroupMemberState.REMOVE) {
-                member.state = GroupMemberState.INIT;
-            } else if (member.state === GroupMemberState.ADD_AND_REMOVE) {
-                member.state = GroupMemberState.ADD;
-            }
-        });
-    }
-
-    private compareAndApply(mails: string[], mode: string): void {
-        this.addMemberMail(mails);
-        if (mode === 'add') {
-            return;
-        }
-        this.targetMembers.forEach(member => {
-            const mail = mails.find(m => m === member.mail);
-            if (mail) {
-
-            } else {
-                member.state = GroupMemberState.REMOVE;
-            }
-        });
-    }
-
-    addNewMember(): void {
-        const addMemberDialog = this.dialog.open(AddMemberDialogComponent, {
-            width: '450px',
-            data: {
-                'memberMails': this.targetMembers
-                    .filter(mem => mem.state === GroupMemberState.INIT || mem.state === GroupMemberState.ADD)
-                    .map(mem => mem.mail)
-            }
-        });
-        addMemberDialog.afterClosed()
-            .subscribe((result) => {
-                if (result && result.mails) {
-                    this.userService.getUserList(true).toPromise().then(() => {
-                        this.addMemberMail(result.mails);
-                    });
-                }
-            }, console.error);
     }
 
     orderByText(col: string): string {
