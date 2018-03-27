@@ -115,19 +115,23 @@ export class AddMemberInputComponent implements OnInit {
     }
 
     this.userService.getUserList().toPromise().then(users => {
-      this.mailsCache = users
-        .filter(user => !!user.mail);
+      this.initCache(users);
       this.filteredMails = this.mailControl.valueChanges
         .startWith('')
         .map(inputValue => this.onInputChange(inputValue))
         .map(inputValue => inputValue ? this.filterMails(inputValue) : this.primaryCandidateMails());
 
-      this.usersCache = users.filter((x, i, self) => self.map(u => u.id).indexOf(x.id) === i);
       this.filteredUsers = this.userControl.valueChanges
         .startWith('')
         .map(inputValue => this.onUserChange(inputValue))
         .map(inputValue => inputValue ? this.filterUsers(inputValue) : this.primaryCandidateUsers());
     });
+  }
+
+  private initCache(users: User[]): void {
+    this.mailsCache = users
+      .filter(user => !!user.mail);
+    this.usersCache = users.filter((x, i, self) => self.map(u => u.id).indexOf(x.id) === i);
   }
 
   displayMail(user?: User): string {
@@ -185,6 +189,7 @@ export class AddMemberInputComponent implements OnInit {
         .toPromise()
         .then(() => {
           this.snackBar.dismiss();
+          this.userService.getUserList(true).subscribe(users => this.initCache(users), reject);
           resolve(new User(this.selectedUser.id, this.mailControl.value, this.selectedUser.name));
         })
         .catch(reject);
