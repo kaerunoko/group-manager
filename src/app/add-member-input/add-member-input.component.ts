@@ -29,7 +29,7 @@ export class AddMemberInputComponent implements OnInit {
   @Input()
   public existingMails: string[];
 
-  private isAddMode(): boolean {
+  isAddMode(): boolean {
     return typeof this.mailControl.value === 'string' && this.mailControl.value.length > 0;
   }
 
