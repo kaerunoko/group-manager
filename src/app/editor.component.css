@@ -43,8 +43,3 @@ section:first-of-type{
     vertical-align: middle;
     position: relative;
 }
-
-.changed::after{
-    content: '＊';
-    color: #F00;
-}

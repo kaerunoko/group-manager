@@ -1,10 +1,6 @@
 <style>
     .groups {
-        width: 400px;
-    }
-
-    mat-input-container.csv-area {
-        width: 400px;
+        width: 100%;
     }
 
     .container {
@@ -15,9 +11,23 @@
         width: 100%;
     }
 
-    .removing {
-        color: #F00;
-        text-decoration: line-through;
+    .id-column {
+        width: 30px;
+        text-align: right;
+    }
+
+    .operation-column {
+        width: 60px;
+        text-align: center;
+    }
+
+    .delete-column {
+        width: 60px;
+        text-align: center;
+    }
+
+    tr.removing {
+        color: #BBB;
     }
 
     .removing .remove-button {
@@ -52,22 +62,28 @@
     <div class="container">
         <table>
             <thead>
-                <th (click)="orderBy('ID')" class="orderable">ID<span class="order">{{orderByText('ID')}}</span></th>
+                <th (click)="orderBy('ID')" class="orderable id-column">ID<span class="order">{{orderByText('ID')}}</span></th>
                 <th (click)="orderBy('NAME')" class="orderable">氏名<span class="order">{{orderByText('NAME')}}</span></th>
                 <th (click)="orderBy('MAIL')" class="orderable">メールアドレス<span class="order">{{orderByText('MAIL')}}</span></th>
-                <th>操作</th>
+                <th class="delete-column"></th>
+                <th class="operation-column">変更</th>
             </thead>
             <tr *ngFor="let member of targetMembers" [ngClass]="{'removing': member.state === 1 || member.state === 3}">
-                <td>{{member.id}}</td>
+                <td class="id-column">{{member.id}}</td>
                 <td>{{member.name}}</td>
                 <td>{{member.mail}}</td>
-                <td [ngClass]="member.state === 0 ? '' : 'changed'">
+                <td class="delete-column">
                     <button mat-icon-button class="remove-button" (click)="member.remove()" color="basic" matTooltip="削除" matTooltipPosition="after">
                         <mat-icon class="mat-24" aria-label="削除">delete</mat-icon>
                     </button>
                     <button mat-icon-button class="undo-button" (click)="member.undo()" matTooltip="戻す" matTooltipPosition="after">
                         <mat-icon class="mat-24" aria-label="戻す">undo</mat-icon>
                     </button>
+                </td>
+                <td class="operation-column">
+                    <span *ngIf="member.state === 1">削除</span>
+                    <span *ngIf="member.state === 2">追加</span>
+                    <span *ngIf="member.state === 3">---</span>
                 </td>
             </tr>
         </table>
