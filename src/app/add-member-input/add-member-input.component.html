@@ -1,8 +1,4 @@
 <style>
-  .container {
-    display: flex;
-  }
-
   .autocomplete {
     flex-grow: 1
   }
@@ -15,13 +11,17 @@
     width: 100%
   }
 
+  .add-button {
+    width: 100%
+  }
+  
   .add-mode-message {
     size: 85%;
     color: #F00;
     margin: 4px 0;
   }
 </style>
-<div class="container">
+<div class="container" fxLayout="row" fxLayout.lt-sm="column">
   <div class="autocomplete">
     <mat-input-container>
       <input type="text" matInput [matAutocomplete]="auto" [formControl]="mailControl" placeholder="MLに追加するメールアドレスを入力">
@@ -45,7 +45,7 @@
     </mat-autocomplete>
   </div>
   <div>
-    <button mat-raised-button color="primary" (click)="submit()" [disabled]="!canSubmit()">追加</button>
+    <button mat-raised-button color="primary" (click)="submit()" [disabled]="!canSubmit()" class="add-button">追加</button>
   </div>
 </div>
 <div *ngIf="isAddMode()" class="add-mode-message">

@@ -59,6 +59,9 @@
     <div class="add-field">
         <app-add-member-input (onSubmit)="add($event)" [existingMails]="getExistingEmails()"></app-add-member-input>
     </div>
+</section>
+
+<section [hidden]="!target">
     <div class="container">
         <table>
             <thead>

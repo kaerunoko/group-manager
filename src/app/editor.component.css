@@ -18,18 +18,28 @@ td{
     height: 40px;
 }
 
+@media(max-width: 599px){
+    th, td {
+        padding: 2px;
+    }
+}
+
 tr{
     border-bottom: 1px solid #F5F5F5;
 }
 
 section {
-    padding-top: 16px;
-    padding-bottom: 16px;
-    padding-left: 32px;
-    padding-right: 32px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    margin-left: 32px;
+    margin-right: 32px;
 }
-section:first-of-type{
-    padding-top: 32px;
+
+@media(max-width: 599px) {
+    section {
+        margin-right: 16px;
+        margin-left: 16px;
+    }
 }
 
 .orderable {
