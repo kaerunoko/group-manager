@@ -1,0 +1,30 @@
+<div class="container" fxLayout="row" fxLayout.lt-sm="column">
+  <div class="autocomplete">
+    <mat-input-container>
+      <input type="text" matInput [matAutocomplete]="auto" [formControl]="mailControl" placeholder="MLに追加するメールアドレスを入力">
+      <mat-error *ngIf="mailControl.invalid">{{getEmailErrorMessage()}}</mat-error>
+    </mat-input-container>
+    <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption [displayWith]="displayMail">
+      <mat-option *ngFor="let mail of filteredMails | async" [value]="mail" [disabled]="isMember(mail)">
+        {{mail.mail}} &lt;{{mail.id}} {{mail.name}}&gt;
+      </mat-option>
+    </mat-autocomplete>
+  </div>
+  <div class="new-mail">
+    <mat-input-container>
+      <input type="text" matInput placeholder="ID 氏名" [value]="displayIdAndName()" [matAutocomplete]="auto2" [formControl]="userControl"
+        required=true>
+    </mat-input-container>
+    <mat-autocomplete #auto2="matAutocomplete" autoActiveFirstOption [displayWith]="displayIdAndName()">
+      <mat-option *ngFor="let user of filteredUsers | async" [value]="user">
+        {{user ? user.id + ' ' + user.name : ''}}
+      </mat-option>
+    </mat-autocomplete>
+  </div>
+  <div>
+    <button mat-raised-button color="primary" (click)="submit()" [disabled]="!canSubmit()" class="add-button">追加</button>
+  </div>
+</div>
+<div *ngIf="isAddMode()" class="add-mode-message">
+  まだどのメーリングリストでも使われていないメールアドレスのようです。ID/氏名を合わせて登録します。
+</div>

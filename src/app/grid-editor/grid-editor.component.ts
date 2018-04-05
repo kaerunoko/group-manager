@@ -16,7 +16,7 @@ import { UserService } from '../service/user.service';
     selector: 'app-grid-editor',
     templateUrl: 'grid-editor.component.html',
     providers: [GroupService],
-    styleUrls: ['../editor.component.css']
+    styleUrls: ['../editor.component.scss', 'grid-editor.component.scss']
 })
 export class GridEditorComponent implements OnInit {
     users: User[] = [];

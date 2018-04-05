@@ -1,35 +1,4 @@
 <!-- GridEditor: グリッドでの編集が仕事。保存ボタンを押したタイミングでOnChangeイベント発火 -->
-
-<style>
-    .filter-by-id {
-        width: 50px
-    }
-    .name-col {
-        min-width: 120px;
-    }
-
-    .mail-col {
-        min-width: 200px;
-        border-right: 1px solid #F5F5F5;
-    }
-
-    .ml-description {
-        min-width: 100px;
-    }
-
-    td {
-        min-width: 50px;
-    }
-
-    .showOnlyActiveGroupHeader {
-        text-align: left;
-    }
-
-    mat-icon.info-icon{
-        cursor: help;
-    }
-</style>
-
 <section>
     <button mat-raised-button (click)="save()" color="primary">保存</button>
     <button mat-raised-button (click)="reload()">再読込<mat-icon class="mat-24" aria-label="再読込" matTooltip="再読込">refresh</mat-icon></button>

@@ -7,6 +7,7 @@ import { environment } from '../../environments/environment';
 
 @Component({
     templateUrl: './gapi.component.html',
+    styleUrls: ['gapi.component.scss'],
     selector: 'app-google-api'
 })
 export class GoogleApiComponent implements OnInit {

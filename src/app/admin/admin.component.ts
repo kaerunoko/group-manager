@@ -8,7 +8,7 @@ import { Observable } from 'rxjs/Observable';
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
-  styleUrls: ['./admin.component.css', '../editor.component.css'],
+  styleUrls: ['./admin.component.css', '../editor.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
 export class AdminComponent implements OnInit {

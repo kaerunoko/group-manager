@@ -9,7 +9,8 @@ import { GroupChangeRequest, GroupUserChangeRequestMode } from '../model/editor'
 import { GroupMember } from '../model/groupUsers';
 
 @Component({
-    templateUrl: 'confirm-dialog.component.html'
+    templateUrl: 'confirm-dialog.component.html',
+    styleUrls: ['confirm-dialog.component.scss']
 })
 export class UpdateConfirmDialogComponent implements OnInit {
     groupChangeRequests: GroupChangeRequest[];

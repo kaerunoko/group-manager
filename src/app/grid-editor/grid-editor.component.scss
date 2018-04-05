@@ -1,0 +1,27 @@
+.filter-by-id {
+    width: 50px
+}
+.name-col {
+    min-width: 120px;
+}
+
+.mail-col {
+    min-width: 200px;
+    border-right: 1px solid #F5F5F5;
+}
+
+.ml-description {
+    min-width: 100px;
+}
+
+td {
+    min-width: 50px;
+}
+
+.showOnlyActiveGroupHeader {
+    text-align: left;
+}
+
+mat-icon.info-icon{
+    cursor: help;
+}

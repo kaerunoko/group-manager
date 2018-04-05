@@ -4,6 +4,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpModule, Http, Response } from '@angular/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import 'rxjs/Rx';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import {
   MatButtonModule,
@@ -41,6 +42,7 @@ import { GoogleApiServiceMock } from './service/mock/gapi.service';
 import { AddMemberDialogComponent } from './add-member-dialog/add-member-dialog.component';
 import { AdminComponent } from './admin/admin.component';
 import { RegisterButtonComponent } from './register-button/register-button.component';
+import { AddMemberInputComponent } from './add-member-input/add-member-input.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +53,8 @@ import { RegisterButtonComponent } from './register-button/register-button.compo
     GoogleApiComponent,
     AddMemberDialogComponent,
     AdminComponent,
-    RegisterButtonComponent
+    RegisterButtonComponent,
+    AddMemberInputComponent
   ],
   imports: [
     BrowserModule,
@@ -59,6 +62,7 @@ import { RegisterButtonComponent } from './register-button/register-button.compo
     HttpModule,
     FormsModule,
     ReactiveFormsModule,
+    FlexLayoutModule,
     MatButtonModule,
     MatCheckboxModule,
     MatSlideToggleModule,
