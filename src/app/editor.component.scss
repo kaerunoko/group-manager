@@ -1,3 +1,6 @@
+$sm: 599px;
+$bg-gray:#F5F5F5;
+
 table {
     border-collapse: collapse;
     width: 100%;
@@ -7,25 +10,23 @@ table {
     margin: 0px;
 }
 
-th{
-    padding: 4px 8px;
-    height: 40px;
-    background-color: #F5F5F5;
-}
-
-td{
+th, td{
     padding: 4px 8px;
     height: 40px;
 }
 
-@media(max-width: 599px){
+@media(max-width: $sm){
     th, td {
         padding: 2px;
     }
 }
 
+th {
+    background-color: $bg-gray;
+}
+
 tr{
-    border-bottom: 1px solid #F5F5F5;
+    border-bottom: 1px solid $bg-gray;
 }
 
 section {
@@ -35,7 +36,7 @@ section {
     margin-right: 32px;
 }
 
-@media(max-width: 599px) {
+@media(max-width: $sm) {
     section {
         margin-right: 16px;
         margin-left: 16px;

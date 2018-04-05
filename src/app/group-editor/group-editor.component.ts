@@ -19,7 +19,7 @@ import { MailUtil } from '../utils/mailutil';
 @Component({
     templateUrl: './group-editor.component.html',
     selector: 'app-group-editor',
-    styleUrls: ['../editor.component.css']
+    styleUrls: ['../editor.component.scss', 'group-editor.component.scss']
 })
 export class GroupEditorComponent implements OnInit {
     @Output() onSave: EventEmitter<ChangeEvent> = new EventEmitter();

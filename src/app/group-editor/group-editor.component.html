@@ -1,48 +1,3 @@
-<style>
-    .groups {
-        width: 100%;
-    }
-
-    .container {
-        display: flex;
-    }
-
-    .add-field {
-        width: 100%;
-    }
-
-    .id-column {
-        width: 30px;
-        text-align: right;
-    }
-
-    .operation-column {
-        width: 60px;
-        text-align: center;
-    }
-
-    .delete-column {
-        width: 60px;
-        text-align: center;
-    }
-
-    tr.removing {
-        color: #BBB;
-    }
-
-    .removing .remove-button {
-        display: none;
-    }
-
-    .undo-button {
-        display: none;
-    }
-
-    .removing .undo-button {
-        display: inline-block;
-    }
-</style>
-
 <section>
     <button mat-raised-button color="primary" [disabled]="!isModified()" (click)="save()">保存</button>
 </section>
@@ -62,33 +17,31 @@
 </section>
 
 <section [hidden]="!target">
-    <div class="container">
-        <table>
-            <thead>
-                <th (click)="orderBy('ID')" class="orderable id-column">ID<span class="order">{{orderByText('ID')}}</span></th>
-                <th (click)="orderBy('NAME')" class="orderable">氏名<span class="order">{{orderByText('NAME')}}</span></th>
-                <th (click)="orderBy('MAIL')" class="orderable">メールアドレス<span class="order">{{orderByText('MAIL')}}</span></th>
-                <th class="delete-column"></th>
-                <th class="operation-column">変更</th>
-            </thead>
-            <tr *ngFor="let member of targetMembers" [ngClass]="{'removing': member.state === 1 || member.state === 3}">
-                <td class="id-column">{{member.id}}</td>
-                <td>{{member.name}}</td>
-                <td>{{member.mail}}</td>
-                <td class="delete-column">
-                    <button mat-icon-button class="remove-button" (click)="member.remove()" color="basic" matTooltip="削除" matTooltipPosition="after">
-                        <mat-icon class="mat-24" aria-label="削除">delete</mat-icon>
-                    </button>
-                    <button mat-icon-button class="undo-button" (click)="member.undo()" matTooltip="戻す" matTooltipPosition="after">
-                        <mat-icon class="mat-24" aria-label="戻す">undo</mat-icon>
-                    </button>
-                </td>
-                <td class="operation-column">
-                    <span *ngIf="member.state === 1">削除</span>
-                    <span *ngIf="member.state === 2">追加</span>
-                    <span *ngIf="member.state === 3">---</span>
-                </td>
-            </tr>
-        </table>
-    </div>
+    <table>
+        <thead>
+            <th (click)="orderBy('ID')" class="orderable id-column">ID<span class="order">{{orderByText('ID')}}</span></th>
+            <th (click)="orderBy('NAME')" class="orderable">氏名<span class="order">{{orderByText('NAME')}}</span></th>
+            <th (click)="orderBy('MAIL')" class="orderable">メールアドレス<span class="order">{{orderByText('MAIL')}}</span></th>
+            <th class="delete-column"></th>
+            <th class="operation-column">変更</th>
+        </thead>
+        <tr *ngFor="let member of targetMembers" [ngClass]="{'removing': member.state === 1 || member.state === 3}">
+            <td class="id-column">{{member.id}}</td>
+            <td>{{member.name}}</td>
+            <td>{{member.mail}}</td>
+            <td class="delete-column">
+                <button mat-icon-button class="remove-button" (click)="member.remove()" color="basic" matTooltip="削除" matTooltipPosition="after">
+                    <mat-icon class="mat-24" aria-label="削除">delete</mat-icon>
+                </button>
+                <button mat-icon-button class="undo-button" (click)="member.undo()" matTooltip="戻す" matTooltipPosition="after">
+                    <mat-icon class="mat-24" aria-label="戻す">undo</mat-icon>
+                </button>
+            </td>
+            <td class="operation-column">
+                <span *ngIf="member.state === 1">削除</span>
+                <span *ngIf="member.state === 2">追加</span>
+                <span *ngIf="member.state === 3">---</span>
+            </td>
+        </tr>
+    </table>
 </section>

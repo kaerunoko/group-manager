@@ -12,7 +12,7 @@ import { MailUtil } from '../utils/mailutil';
 @Component({
   selector: 'app-add-member-input',
   templateUrl: './add-member-input.component.html',
-  styleUrls: ['./add-member-input.component.css']
+  styleUrls: ['./add-member-input.component.scss']
 })
 export class AddMemberInputComponent implements OnInit {
   filteredMails: Observable<User[]>;

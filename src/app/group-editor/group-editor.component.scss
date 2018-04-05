@@ -1,0 +1,27 @@
+.groups, .add-field {
+    width: 100%;
+}
+
+.id-column {
+    width: 30px;
+    text-align: right;
+}
+
+.operation-column, .delete-column {
+    width: 60px;
+    text-align: center;
+}
+
+.undo-button {
+    display: none;
+}
+
+.removing {
+    color: #BBB;
+    .remove-button {
+        display: none;
+    }
+    .undo-button {
+        display: inline-block;
+    }
+}
